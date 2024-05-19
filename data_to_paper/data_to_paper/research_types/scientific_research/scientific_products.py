@@ -30,6 +30,7 @@ CODE_STEPS_TO_STAGES_NAMES_AGENTS: Dict[str, Tuple[Stage, str, ScientificAgent]]
     # 'data_preprocessing': (ScientificStage.PREPROCESSING, 'Data Preprocessing', ScientificAgent.DataPreprocessor),
     'data_analysis': (ScientificStage.CODE, 'Data Analysis', ScientificAgent.Debugger),
     'data_to_latex': (ScientificStage.TABLES, 'LaTeX Table Design', ScientificAgent.InterpretationReviewer),
+    'figures': (ScientificStage.FIGURES, 'Figures', ScientificAgent.InterpretationReviewer),
 }
 
 
@@ -41,6 +42,7 @@ class HypertargetPrefix(Enum):
     FILE_DESCRIPTIONS = ('T', 'U', 'V', 'W', 'X', 'Y', 'Z')
     ADDITIONAL_RESULTS = ('R',)
     LATEX_TABLES = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
+    FIGURES = ('I', 'J', 'K', 'L', 'M', 'N', 'O', 'P')
 
 
 def get_code_stage(code_step: str) -> Stage:

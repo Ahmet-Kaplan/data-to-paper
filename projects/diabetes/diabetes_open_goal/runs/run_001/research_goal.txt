@@ -1,0 +1,5 @@
+## Research Goal: 
+Our research aims to investigate how the interplay between lifestyle behaviors and certain medical conditions influence the risk of diabetes, with particular focus on the moderating effect of physical mobility.
+
+## Hypothesis: 
+We hypothesize that while regular physical activity correlates negatively with diabetes incidence (i.e., physically active people are less likely to have diabetes), this relationship may be moderated by an individual's physical mobility (ability to walk or climb stairs). Specifically, individuals who are physically active but have some mobility difficulties may have an increased risk of diabetes compared to those who are equally active but without mobility difficulties. This hypothesis takes into account potential confounding factors such as body mass index (BMI), high blood pressure, high cholesterol, stroke, heart disease, smoking, and heavy drinking.

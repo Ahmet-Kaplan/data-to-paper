@@ -540,6 +540,7 @@ class PysideApp(QMainWindow, BaseApp):
         # Bypass-continue checkbox:
         self.bypass_continue_checkbox = QCheckBox("Auto continue")
         self.bypass_continue_checkbox.setChecked(False)
+        self.bypass_continue_checkbox.setStyleSheet("color: white;")
         # Hover message:
         self.bypass_continue_checkbox.setToolTip(
             "When unchecked, a user 'Continue' approval is required for each LLM iteration.\n"

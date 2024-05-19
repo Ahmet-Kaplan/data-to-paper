@@ -1,0 +1,24 @@
+## Statistical considerations:
+### Confounding variables:
+We should adjust for potential confounding variables such as BMI, high blood pressure, high cholesterol, stroke, heart disease, smoking, and heavy drinking to account for their potential influence on the relationship between physical activity, mobility difficulties, and diabetes risk.
+### Missing data points:
+Based on the Data Exploration Code and Output, there are no missing data points in the dataset. However, we should check for any unknown/undefined values as indicated by the special numeric values (e.g., 99 or 88) and handle them appropriately.
+### Dependencies between data points:
+We need to account for potential dependencies between data points due to the hierarchical nature of the data, as the dataset is derived from a survey that collects responses from individuals. We can consider using appropriate mixed-effects models or clustering techniques that account for the potential correlations within individuals.
+
+## Hypotheses:
+### Hypothesis:
+The association between physical activity and diabetes risk is moderated by physical mobility difficulties
+### Test:
+To test this hypothesis, we can perform a logistic regression analysis with diabetes_binary as the dependent variable, physical activity as the independent variable, and physical mobility difficulties as the moderator variable. We should adjust for potential confounding variables such as BMI, high blood pressure, high cholesterol, stroke, heart disease, smoking, and heavy drinking. We can include interaction terms between physical activity and physical mobility difficulties to assess moderation.
+
+### Hypothesis:
+The relationship between physical activity and diabetes risk differs based on gender
+### Test:
+To test this hypothesis, we can perform a logistic regression analysis with diabetes_binary as the dependent variable, physical activity as the independent variable, and gender as the moderator variable. We should adjust for potential confounding variables such as BMI, high blood pressure, high cholesterol, stroke, heart disease, smoking, and heavy drinking. We can include interaction terms between physical activity and gender to assess moderation.
+
+### Hypothesis:
+The relationship between physical activity and diabetes risk differs based on age
+### Test:
+To test this hypothesis, we can perform a logistic regression analysis with diabetes_binary as the dependent variable, physical activity as the independent variable, and age as the moderator variable. We should adjust for potential confounding variables such as BMI, high blood pressure, high cholesterol, stroke, heart disease, smoking, and heavy drinking. We can include interaction terms between physical activity and age to assess moderation.
+

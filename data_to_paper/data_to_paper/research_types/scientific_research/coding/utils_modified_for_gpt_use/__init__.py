@@ -5,3 +5,4 @@ The functions in this package are overridden functions that search for issues be
 
 from .to_latex_with_note import _to_latex_with_note as to_latex_with_note
 from ..original_utils import is_str_in_df, split_mapping, AbbrToNameDef
+from ..original_utils.to_figure_with_caption import to_latex_figure_with_caption

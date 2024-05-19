@@ -71,14 +71,14 @@ DEFAULT_FORBIDDEN_MODULES_AND_FUNCTIONS = (
         # (builtins, 'exec', False),
     )
 
-try:
-    import matplotlib.pyplot as plt
-    DEFAULT_FORBIDDEN_MODULES_AND_FUNCTIONS += ((plt, 'show', True),)
-except ImportError:
-    pass
+# try:
+#     import matplotlib.pyplot as plt
+#     DEFAULT_FORBIDDEN_MODULES_AND_FUNCTIONS += ((plt, 'show', True),)
+# except ImportError:
+#     pass
 
 
-DEFAULT_FORBIDDEN_IMPORTS = ('os', 'sys', 'subprocess', 'shutil', 'matplotlib')
+DEFAULT_FORBIDDEN_IMPORTS = ('os', 'sys', 'subprocess', 'shutil')
 
 
 @dataclass

@@ -5,6 +5,7 @@ from data_to_paper.base_steps import DirectorProductGPT, CheckLatexCompilation, 
 
 from .cast import ScientificAgent
 from .coding.after_coding import RequestCodeExplanation, RequestCodeProducts
+from .coding.figures import CreateFiguresCodeProductsGPT
 from .coding.latex_tables import CreateLatexTablesCodeProductsGPT
 from .coding.preprocessing import DataPreprocessingCodeProductsGPT
 from .coding.data_analysis import DataAnalysisCodeProductsGPT
@@ -187,6 +188,15 @@ class ScientificStepsRunner(DataStepRunner, CheckLatexCompilation):
                                   explain_created_files_class=None,
                                   ).get_code_and_output_and_descriptions()
         self.send_product_to_client('codes_and_outputs_with_explanations:data_to_latex')
+        self.advance_stage(ScientificStage.FIGURES)
+        RequestCodeProducts.from_(self,
+                                  code_step='figures',
+                                  latex_document=self.latex_document,
+                                  code_writing_class=CreateFiguresCodeProductsGPT,
+                                  explain_code_class=None,
+                                  explain_created_files_class=None,
+                                  ).get_code_and_output_and_descriptions()
+        self.send_product_to_client('codes_and_outputs_with_explanations:figures')
 
         # literature review and scope
         self.advance_stage(ScientificStage.INTERPRETATION)

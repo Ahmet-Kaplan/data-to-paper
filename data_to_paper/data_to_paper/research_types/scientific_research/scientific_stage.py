@@ -10,6 +10,7 @@ class ScientificStage(Stage):
     PLAN = "Hypothesis & Plan"
     CODE = "Data Analysis"
     TABLES = "Create Tables"
+    FIGURES = "Create Figures"
     INTERPRETATION = "Draft abstract"
     LITERATURE_REVIEW_WRITING = "Lit. Review II"
     WRITING_RESULTS = "Results"
