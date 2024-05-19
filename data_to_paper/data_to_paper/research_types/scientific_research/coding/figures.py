@@ -5,9 +5,9 @@ from data_to_paper.base_steps import DebuggerConverser
 from data_to_paper.base_steps.request_code import CodeReviewPrompt
 from data_to_paper.code_and_output_files.code_and_output import CodeAndOutput
 from data_to_paper.code_and_output_files.output_file_requirements import TextContentOutputFileRequirement, \
-    OutputFileRequirements
+    OutputFileRequirements, OutputFileRequirement
 from data_to_paper.research_types.scientific_research.cast import ScientificAgent
-from data_to_paper.research_types.scientific_research.coding.base_code_conversers import BaseCreateTablesCodeProductsGPT
+from data_to_paper.research_types.scientific_research.coding.base_code_conversers import BaseScientificCodeProductsGPT
 from data_to_paper.research_types.scientific_research.coding.latex_table_debugger import UtilsCodeRunner
 from data_to_paper.research_types.scientific_research.scientific_products import HypertargetPrefix, ScientificProducts
 from data_to_paper.run_gpt_code.code_runner import CodeRunner
@@ -17,21 +17,34 @@ from data_to_paper.utils import dedent_triple_quote_str
 @dataclass
 class CreateFiguresCodeAndOutput(CodeAndOutput):
     def get_code_header_for_file(self, filename: str) -> Optional[str]:
-        # 'figure_*.pdf' -> '# FIGURE *'
-        if filename.startswith('figure_') and filename.endswith('.pdf'):
-            return f'# FIGURE {filename[6:-4]}'
+        # 'figure_*.tex' -> '# FIGURE *'
+        if filename.startswith('figure_') and filename.endswith('.tex'):
+            return f'# FIGURE {filename[7:-4]}'
         return None
 
 
 @dataclass(frozen=True)
-class FigureOutputFileRequirement(TextContentOutputFileRequirement):
-    filename: str = '*.pdf'
+class FigureOutputFileRequirement(OutputFileRequirement):
+    filename: str = '*.png'
+    minimal_count: int = 1
+    should_keep_file: bool = True
+
+    def get_content(self, file_path: str) -> Optional[str]:
+        """
+        Return html file containing the png and the caption
+        """
+        return f'<img src="{file_path}" alt="Figure" />'
+
+
+
+@dataclass(frozen=True)
+class FigureLatexOutputFileRequirement(TextContentOutputFileRequirement):
+    filename: str = '*.tex'
     minimal_count: int = 1
     hypertarget_prefixes = HypertargetPrefix.FIGURES.value
     max_tokens = None
+    should_keep_file: bool = True
 
-
-figure_file_requirement = FigureOutputFileRequirement()
 
 @dataclass
 class FigureDebuggerConverser(DebuggerConverser):
@@ -40,7 +53,7 @@ class FigureDebuggerConverser(DebuggerConverser):
 
 
 @dataclass
-class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
+class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
     code_step: str = 'figures'
     debugger_cls: Type[DebuggerConverser] = FigureDebuggerConverser
     code_and_output_cls: Type[CodeAndOutput] = CreateFiguresCodeAndOutput
@@ -54,7 +67,7 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
          'created_files_content:data_analysis:table_?.pkl')
     supported_packages: Tuple[str, ...] = ('pandas', 'numpy', 'matplotlib', 'seaborn', 'my_utils')
     output_file_requirements: OutputFileRequirements = OutputFileRequirements(
-        [figure_file_requirement])
+        [FigureOutputFileRequirement(), FigureLatexOutputFileRequirement()])
 
     provided_code: str = dedent_triple_quote_str('''
         def to_latex_figure_with_caption(figure, filename: str, caption: str, label: str, comment: str = None):
@@ -65,21 +78,21 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
             latex = f"""
         \\begin{{figure}}[htbp]
         \\centering
-        \\includegraphics{{{filename}}}
+        \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
         \\caption{{{caption}}}
         \\label{{{label}}}
         \\end{{figure}}
         """
             if comment:
-                latex = comment + '\n' + latex
-            with open(filename.replace('.pdf', '.tex'), 'w') as f:
+                latex = comment + '\\n' + latex
+            with open(filename.replace('.png', '.tex'), 'w') as f:
                 f.write(latex)
             return latex
         ''')
 
     mission_prompt: str = dedent_triple_quote_str('''
         Please write a Python code to create figures using the "matplotlib" and "seaborn" packages, and save them as \t
-        ".pdf" files with captions and labels for our scientific paper.
+        ".png" files with captions and labels for our scientific paper.
 
         Your code should use the following custom function provided for import from `my_utils`:
         
@@ -92,14 +105,14 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
             latex = f"""
         \\begin{{figure}}[htbp]
         \\centering
-        \\includegraphics{{{filename}}}
+        \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
         \\caption{{{caption}}}
         \\label{{{label}}}
         \\end{{figure}}
         """
             if comment:
-                latex = comment + '\n' + latex
-            with open(filename.replace('.pdf', '.tex'), 'w') as f:
+                latex = comment + '\\\n' + latex
+            with open(filename.replace('.png', '.tex'), 'w') as f:
                 f.write(latex)
             return latex
         ```
@@ -107,7 +120,7 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
         Your code should:
         
         Use matplotlib and seaborn to create the figures.
-        Ensure each figure is saved as a .pdf file.
+        Ensure each figure is saved as a .png file.
         Add a caption and label to each figure using the provided to_latex_figure_with_caption function.
         To ensure clarity and consistency, define a dictionary, figure_details, which maps figure identifiers to \t
         their corresponding captions and labels. This will help avoid any mistakes in labeling and captioning.
@@ -116,9 +129,12 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
         
         ```python
         # IMPORT
+        import pandas as pd
         import matplotlib.pyplot as plt
         import seaborn as sns
         from my_utils import to_latex_figure_with_caption
+        
+        pd.read_csv('<data>')
         
         # PREPARATION FOR ALL FIGURES
         figure_details = {
@@ -139,7 +155,7 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
         sns.histplot(data=df, x='variable_x', ax=ax1)
         # Save the figure with caption and label
         to_latex_figure_with_caption(
-            fig1, 'figure_1.pdf',
+            fig1, 'figure_1.png',
             caption=figure_details['fig1']['caption'], 
             label=figure_details['fig1']['label']
         )
@@ -150,7 +166,7 @@ class CreateFiguresCodeProductsGPT(BaseCreateTablesCodeProductsGPT):
         sns.scatterplot(data=df, x='variable_y', y='variable_z', ax=ax2)
         # Save the figure with caption and label
         to_latex_figure_with_caption(
-            fig2, 'figure_2.pdf',
+            fig2, 'figure_2.png',
             caption=figure_details['fig2']['caption'], 
             label=figure_details['fig2']['label']
         )

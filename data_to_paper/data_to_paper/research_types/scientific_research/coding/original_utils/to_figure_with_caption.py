@@ -6,14 +6,14 @@ def to_latex_figure_with_caption(figure, filename: str, caption: str, label: str
     latex = f"""
 \\begin{{figure}}[htbp]
 \\centering
-\\includegraphics[width=0.8\\textwidth]{{{filename}}}
+\\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
 \\caption{{{caption}}}
 \\label{{{label}}}
 \\end{{figure}}
 """
     if comment:
         latex = comment + '\n' + latex
-    with open(filename.replace('.pdf', '.tex'), 'w') as f:
+    with open(filename.replace('.png', '.tex'), 'w') as f:
         f.write(latex)
     return latex
 
@@ -30,6 +30,6 @@ def get_figure_and_caption_as_html(figure, filename: str, caption: str, label: s
 """
     if comment:
         html = comment + '\n' + html
-    with open(filename.replace('.pdf', '.html'), 'w') as f:
+    with open(filename.replace('.png', '.html'), 'w') as f:
         f.write(html)
     return html
