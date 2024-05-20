@@ -76,15 +76,15 @@ class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
             """
             figure.savefig(filename)
             latex = f"""
-        \\begin{{figure}}[htbp]
-        \\centering
-        \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
-        \\caption{{{caption}}}
-        \\label{{{label}}}
-        \\end{{figure}}
-        """
+                \\begin{{figure}}[htbp]
+                \\centering
+                \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
+                \\caption{{{caption}}}
+                \\label{{{label}}}
+                \\end{{figure}}
+            """
             if comment:
-                latex = comment + '\\n' + latex
+                latex = comment + latex
             with open(filename.replace('.png', '.tex'), 'w') as f:
                 f.write(latex)
             return latex
@@ -103,15 +103,15 @@ class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
             """
             figure.savefig(filename)
             latex = f"""
-        \\begin{{figure}}[htbp]
-        \\centering
-        \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
-        \\caption{{{caption}}}
-        \\label{{{label}}}
-        \\end{{figure}}
-        """
+                \\begin{{figure}}[htbp]
+                \\centering
+                \\includegraphics[width=0.8\\textwidth]{{{filename.replace(".png", "")}}}
+                \\caption{{{caption}}}
+                \\label{{{label}}}
+                \\end{{figure}}
+            """
             if comment:
-                latex = comment + '\\\n' + latex
+                latex = comment + latex
             with open(filename.replace('.png', '.tex'), 'w') as f:
                 f.write(latex)
             return latex
