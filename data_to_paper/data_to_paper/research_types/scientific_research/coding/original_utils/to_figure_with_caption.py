@@ -17,6 +17,7 @@ def to_latex_figure_with_caption(figure, filename: str, caption: str, label: str
         f.write(latex)
     return latex
 
+
 def get_figure_and_caption_as_html(figure, filename: str, caption: str, comment: str = None):
     """
     Save a figure with a caption and label.

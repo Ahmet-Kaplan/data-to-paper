@@ -27,7 +27,6 @@ class CreateFiguresCodeAndOutput(CodeAndOutput):
 class FigureOutputFileRequirement(OutputFileRequirement):
     filename: str = '*.png'
     minimal_count: int = 1
-    should_keep_file: bool = True
 
     def get_content(self, file_path: str) -> Optional[str]:
         """
@@ -36,14 +35,12 @@ class FigureOutputFileRequirement(OutputFileRequirement):
         return f'<img src="{file_path}" alt="Figure" />'
 
 
-
 @dataclass(frozen=True)
 class FigureLatexOutputFileRequirement(TextContentOutputFileRequirement):
     filename: str = '*.tex'
     minimal_count: int = 1
     hypertarget_prefixes = HypertargetPrefix.FIGURES.value
     max_tokens = None
-    should_keep_file: bool = True
 
 
 @dataclass
@@ -61,6 +58,10 @@ class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
         '# IMPORT',
         '# PREPARATION FOR ALL FIGURES',
     )
+    phrases_required_in_code: Tuple[str, ...] = \
+        ('\nfrom my_utils import to_latex_figure_with_caption',)
+    attrs_to_send_to_debugger: Tuple[str, ...] = \
+        BaseScientificCodeProductsGPT.attrs_to_send_to_debugger + ('phrases_required_in_code',)
     user_agent: ScientificAgent = ScientificAgent.InterpretationReviewer
     background_product_fields: Tuple[str, ...] = \
         ('data_file_descriptions', 'research_goal', 'codes:data_preprocessing', 'codes:data_analysis',
@@ -134,7 +135,7 @@ class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
         import seaborn as sns
         from my_utils import to_latex_figure_with_caption
         
-        pd.read_csv('<data>')
+        df = pd.read_csv('path/to/datafile.csv')
         
         # PREPARATION FOR ALL FIGURES
         figure_details = {
@@ -170,7 +171,7 @@ class CreateFiguresCodeProductsGPT(BaseScientificCodeProductsGPT):
             caption=figure_details['fig2']['caption'], 
             label=figure_details['fig2']['label']
         )
-        
+        ```
         # FIGURE ?:
         # <etc, all figures required>
         Avoid the following:
