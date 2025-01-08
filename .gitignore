@@ -14,3 +14,7 @@ __pycache__/
 **.egg-info/
 
 src/data_to_paper/interactive/config/run_setup.json
+
+**/temp_run/*
+**/runs/*
+.vscode/
